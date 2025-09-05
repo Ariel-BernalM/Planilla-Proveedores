@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Documentos HSE Proveedores</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Cambria', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #06402b;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #0B3122;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .config-section {
+            padding: 20px;
+            background: var(--light);
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .checkbox-item input {
+            width: auto;
+        }
+        
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .print-btn {
+            background: var(--success);
+            margin-left: 10px;
+        }
+        
+        .print-btn:hover {
+            background: #219653;
+        }
+        
+        .reset-btn {
+            background: var(--accent);
+            margin-left: 10px;
+        }
+        
+        .reset-btn:hover {
+            background: #c0392b;
+        }
+        
+        .results-section {
+            padding: 20px;
+        }
+        
+        .section-title {
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            color: var(--primary);
+            font-size: 22px;
+        }
+        
+        .doc-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .doc-section.empresa {
+            border-left-color: #3498db;
+        }
+        
+        .doc-section.trabajadores {
+            border-left-color: #e74c3c;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .status-select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .status-pendiente {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .status-revision {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .status-aprobado {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-rechazado {
+            background-color: #f5f5f5;
+            color: #616161;
+        }
+        
+        .notes {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff8e1;
+            border-radius: 5px;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .notes h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .summary-item {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .summary-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .config-section {
+                flex-direction: column;
+            }
+            
+            .checkbox-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+            
+            .summary {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Solicitud de Documentos HSE Proveedores</h1>
+            <p class="subtitle">Gestión de documentación de Prevención de Riesgos según duración del proyecto</p>
+        </header>
+        
+        <section class="config-section">
+            <div class="form-group">
+                <label for="project-days">Duración del proyecto (días):</label>
+                <input type="number" id="project-days" min="1" value="30">
+            </div>
+            
+            <div class="form-group">
+                <label>Tipo de trabajo que requiere permiso especial </label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="electrico">
+                        <label for="electrico">Trabajos eléctricos</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="altura">
+                        <label for="altura">Trabajo en altura</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="proveedor">Nombre Empresa:</label>
+                <input type="text" id="proveedor" placeholder="Ingrese nombre de la Empresa">
+            </div>
+            
+            <div class="form-group">
+                <label for="fecha-inicio">Fecha de Inicio: (estimado)</label>
+                <input type="date" id="fecha-inicio">
+            </div>
+        </section>
+        
+        <section class="config-section">
+            <button onclick="calcularDocumentos()">Generar documentación requerida</button>
+            <button class="print-btn" onclick="window.print()">Imprimir Planilla</button>
+       
+        <section class="results-section">
+            <h2 class="section-title">Documentación Requerida</h2>
+            
+            <div class="doc-section empresa">
+                <h3>📋 Documentación de la Empresa</h3>
+                <table id="empresa-table">
+                    <thead>
+                        <tr>
+                            <th>Documento</th>
+                            <th>Requerimiento</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se generarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="doc-section trabajadores">
+                <h3>👷 Documentación de Trabajadores</h3>
+                <table id="trabajadores-table">
+                    <thead>
+                        <tr>
+                            <th>Documento</th>
+                            <th>Requerimiento</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se generarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary">
+                <div class="summary-item">
+                    <h3>Total Documentos</h3>
+                    <div class="summary-number" id="total-docs">0</div>
+                    <p>Documentos requeridos</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Pendientes</h3>
+                    <div class="summary-number" id="pendientes-docs">0</div>
+                    <p>Documentos por revisar</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Aprobados</h3>
+                    <div class="summary-number" id="aprobados-docs">0</div>
+                    <p>Documentos aprobados</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Completado</h3>
+                    <div class="summary-number" id="completado-docs">0%</div>
+                    <p>Porcentaje de avance</p>
+                </div>
+            </div>
+            
+            <div class="notes">
+                <h3>📝 Notas Importantes</h3>
+                <p>• Todos los documentos deben estar vigentes al momento de la solicitud.</p>
+                <p>• La documentación debe ser proporcionada por el proveedor antes del inicio de las actividades.</p>
+                <p>• Verifique que los documentos cumplan con los requisitos legales actuales.</p>
+                <p>• Proporcionar información y/o documentos falsos o adulterados será sancionado con la finalización y bloqueo en el sistema.
+            </div>
+        </section>
+        
+        <footer>
+            <p>Planilla de Gestión de Documentos HSE CBRE-AMSA © Daniel Araya 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        function calcularDocumentos() {
+            const projectDays = parseInt(document.getElementById('project-days').value);
+            const electrico = document.getElementById('electrico').checked;
+            const altura = document.getElementById('altura').checked;
+            
+            const empresaBody = document.querySelector('#empresa-table tbody');
+            const trabajadoresBody = document.querySelector('#trabajadores-table tbody');
+            
+            // Limpiar tablas
+            empresaBody.innerHTML = '';
+            trabajadoresBody.innerHTML = '';
+            
+            // Validar entrada
+            if (isNaN(projectDays) || projectDays < 1) {
+                alert("Por favor, ingrese una duración válida para el proyecto (mayor a 0 días)");
+                return;
+            }
+            
+            // Documentación de la empresa
+            const docsEmpresa = [
+                { doc: "Copia reglamento interno (más ingreso a la Dirección del Trabajo y SEREMI)", req: "Para todos los proyectos" },
+                { doc: "Certificados de afiliación y siniestralidad del organismo administrador", req: "Para todos los proyectos" },
+                { doc: "Procedimiento de trabajo seguro", req: "Para todos los proyectos" }
+            ];
+            
+            if (projectDays > 30) {
+                docsEmpresa.push(
+                    { doc: "Matriz de riesgos", req: "Proyectos > 30 días" },
+                    { doc: "Programa SSO", req: "Proyectos > 30 días" },
+                    { doc: "Certificado de EPP", req: "Proyectos > 30 días" },
+                    { doc: "Certificado de herramientas y equipos", req: "Proyectos > 30 días" }
+                );
+            }
+            
+            // Documentación de trabajadores
+            const docsTrabajadores = [
+                { doc: "Contrato de trabajo + anexo traslado a instalación AMSA", req: "Para todos los proyectos" },
+                { doc: "Cédula de identidad vigente (ambos lados) o permiso trabajo para extranjero", req: "Para todos los proyectos" },
+                { doc: "Difusión de la Información de Riesgos Laborales", req: "Para todos los proyectos" },
+                { doc: "Recepción del reglamento interno", req: "Para todos los proyectos" },
+                { doc: "Recepción de sus EPP", req: "Para todos los proyectos" }
+            ];
+            
+            if (projectDays > 30) {
+                docsTrabajadores.push(
+                    { doc: "Difusión de la matriz de riesgos", req: "Proyectos > 30 días" },
+                    { doc: "Cursos relacionados al DS 594", req: "Proyectos > 30 días" }
+                );
+            }
+            
+            // Documentación adicional por tipo de trabajo
+            if (electrico) {
+                docsTrabajadores.push(
+                    { doc: "Certificado SEC para trabajos eléctricos", req: "Trabajos eléctricos" }
+                );
+            }
+            
+            if (altura) {
+                docsTrabajadores.push(
+                    { doc: "Examen ocupacional para trabajo en altura", req: "Trabajo en altura" }
+                );
+            }
+            
+            // Llenar tabla de documentación de empresa
+            docsEmpresa.forEach(item => {
+                const row = empresaBody.insertRow();
+                row.insertCell(0).textContent = item.doc;
+                row.insertCell(1).textContent = item.req;
+                
+                const statusCell = row.insertCell(2);
+                const select = document.createElement('select');
+                select.className = 'status-select';
+                select.innerHTML = `
+                    <option value="pendiente" class="status-pendiente">Pendiente</option>
+                    <option value="revision" class="status-revision">En revisión</option>
+                    <option value="aprobado" class="status-aprobado">Aprobado</option>
+                    <option value="rechazado" class="status-rechazado">Rechazado</option>
+                `;
+                select.addEventListener('change', actualizarResumen);
+                statusCell.appendChild(select);
+            });
+            
+            // Llenar tabla de documentación de trabajadores
+            docsTrabajadores.forEach(item => {
+                const row = trabajadoresBody.insertRow();
+                row.insertCell(0).textContent = item.doc;
+                row.insertCell(1).textContent = item.req;
+                
+                const statusCell = row.insertCell(2);
+                const select = document.createElement('select');
+                select.className = 'status-select';
+                select.innerHTML = `
+                    <option value="pendiente" class="status-pendiente">Pendiente</option>
+                    <option value="revision" class="status-revision">En revisión</option>
+                    <option value="aprobado" class="status-aprobado">Aprobado</option>
+                    <option value="rechazado" class="status-rechazado">Rechazado</option>
+                `;
+                select.addEventListener('change', actualizarResumen);
+                statusCell.appendChild(select);
+            });
+            
+            // Actualizar resumen
+            actualizarResumen();
+        }
+
+        function actualizarResumen() {
+            const totalDocs = document.querySelectorAll('.status-select').length;
+            const pendientes = document.querySelectorAll('.status-select option[value="pendiente"]:checked').length;
+            const aprobados = document.querySelectorAll('.status-select option[value="aprobado"]:checked').length;
+            const completado = totalDocs > 0 ? Math.round((aprobados / totalDocs) * 100) : 0;
+            
+            document.getElementById('total-docs').textContent = totalDocs;
+            document.getElementById('pendientes-docs').textContent = pendientes;
+            document.getElementById('aprobados-docs').textContent = aprobados;
+            document.getElementById('completado-docs').textContent = `${completado}%`;
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('project-days').value = 30;
+            document.getElementById('electrico').checked = false;
+            document.getElementById('altura').checked = false;
+            document.getElementById('proveedor').value = '';
+            document.getElementById('fecha-inicio').value = '';
+            
+            const empresaBody = document.querySelector('#empresa-table tbody');
+            const trabajadoresBody = document.querySelector('#trabajadores-table tbody');
+            empresaBody.innerHTML = '';
+            trabajadoresBody.innerHTML = '';
+            
+            actualizarResumen();
+        }
+
+        // Establecer fecha mínima como hoy
+        document.getElementById('fecha-inicio').min = new Date().toISOString().split("T")[0];
+        
+        // Calcular documentos al cargar la página
+        window.onload = calcularDocumentos;
+    </script>
+</body>
+</html>
